@@ -159,7 +159,7 @@ html, body { background: #0f1f3d; color: #e8edf5; font-family: 'Barlow', sans-se
 // ============================================================
 // CLIENT CONFIGURATION — edit these two lines for each client
 // ============================================================
-var CLIENT_NAME = 'Brad's Towing';
+var CLIENT_NAME = "Brad's Towing";
 var GITHUB_URL   = 'https://raw.githubusercontent.com/jmullins-DEN/Brads-Towing/main/camera_events.xlsx';
 // ============================================================
 
@@ -600,6 +600,12 @@ function fetchAndMerge(onDone) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', GITHUB_URL, true);
   xhr.responseType = 'arraybuffer';
+  xhr.timeout = 15000;
+  xhr.ontimeout = function() {
+    st.textContent = 'GitHub request timed out — loading local data';
+    loadLocal();
+    if (onDone) onDone();
+  };
   xhr.onload = function() {
     if (xhr.status === 200) {
       try {
